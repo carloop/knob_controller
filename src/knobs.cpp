@@ -4,6 +4,8 @@
 #include "application.h"
 #include "carloop.h"
 
+SYSTEM_THREAD(ENABLED);
+
 void setupKnobs();
 void readKnobs();
 void readKnob(unsigned i);
@@ -24,8 +26,8 @@ const int powerPin = A2;
 const int groundPin = A3;
 const int knobPin[knobCount] = { A4, A5, A6 };
 uint16_t knobValueRaw[knobCount] = { 0 }; // 3.3V = 4096
-uint16_t knobValueLow[knobCount] = { 14, 14, 14 };
-uint16_t knobValueHigh[knobCount] = { 4074, 4074, 4074 };
+uint16_t knobValueLow[knobCount] = { 30, 30, 30 };
+uint16_t knobValueHigh[knobCount] = { 4060, 4060, 4060 };
 uint16_t knobPercent[knobCount] = { 0 }; // 100% = 32768
 const uint16_t knob100Percent = 32768;
 
@@ -89,8 +91,9 @@ void normalizeKnob(unsigned i) {
 void printKnobs() {
   every(200, [] {
     for (unsigned i = 0; i < knobCount; i++) {
-      Serial.printlnf("Knob %d: %d adc, %f%%", i, knobValueRaw[i], knobPercent[i] * 100.0/32768.0);
+      Serial.printf("%d: %4d adc, %3.1f%%  ", i, knobValueRaw[i], knobPercent[i] * 100.0/32768.0);
     }
+    Serial.println("");
   });
 }
 
